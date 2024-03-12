@@ -50,7 +50,7 @@ body:
     required: false
 - type: textarea
   attributes:
-    label: Proposted implementation
+    label: Proposed implementation
     description: Provide a short description of the proposed solution for the new feature.
   validations:
     required: false
