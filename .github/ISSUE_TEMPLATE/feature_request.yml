@@ -63,6 +63,13 @@ body:
       Tip: You can attach images by clicking this area to highlight it and then dragging files in.
   validations:
     required: false
+- type: textarea
+  attributes:
+    label: Related Issues
+    description: |
+      If there are any related issues, please reference them here with `#ISSUE-NUMBER`.
+  validations:
+    required: false
 - type: checkboxes
   attributes:
     label: Are you going to work on this?
