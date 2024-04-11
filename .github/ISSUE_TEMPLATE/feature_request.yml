@@ -23,9 +23,9 @@ body:
     label: Is there an existing issue / PR for this?
     description: Please search to see if an issue / PR already exists for the feature suggested.
     options:
-    - label: I have searched for existing [issues](https://github.com/paulaidt/ACCI_Nextflow/issues)
+    - label: I have searched for existing issues.
       required: true
-    - label: I have searched for existing [PRs](https://github.com/paulaidt/ACCI_Nextflow/pulls)
+    - label: I have searched for existing PRs.
       required: true
 - type: checkboxes
   attributes:
