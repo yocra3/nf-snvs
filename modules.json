@@ -30,6 +30,11 @@
             "git_sha": "8ec825f465b9c17f9d83000022995b4f7de6fe93",
             "installed_by": ["modules"]
           },
+          "picard/sortvcf": {
+            "branch": "master",
+            "git_sha": "20b0918591d4ba20047d7e13e5094bcceba81447",
+            "installed_by": ["modules"]
+          },
           "samtools/flagstat": {
             "branch": "master",
             "git_sha": "04fbbc7c43cebc0b95d5b126f6d9fe4effa33519",
