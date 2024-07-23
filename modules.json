@@ -35,6 +35,11 @@
             "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
             "installed_by": ["modules"]
           },
+          "gatk4/variantfiltration": {
+            "branch": "master",
+            "git_sha": "00409369b2aff69bded4f0a9e7a80e17d933b426",
+            "installed_by": ["modules"]
+          },
           "multiqc": {
             "branch": "master",
             "git_sha": "8ec825f465b9c17f9d83000022995b4f7de6fe93",
