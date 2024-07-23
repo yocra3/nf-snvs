@@ -20,6 +20,11 @@
             "git_sha": "ccf06a896339d2a4ed8594daa9f9adb827cb8189",
             "installed_by": ["modules"]
           },
+          "ensemblvep/vep": {
+            "branch": "master",
+            "git_sha": "e1938f8ecb13b9b82ff488d4b35269c84aa965e8",
+            "installed_by": ["modules"]
+          },
           "fastqc": {
             "branch": "master",
             "git_sha": "c9488585ce7bd35ccd2a30faa2371454c8112fb9",
