@@ -17,6 +17,24 @@ WorkflowSnvs.initialise(params, log)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    VALIDATE INPUTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+// Check mandatory parameters
+
+if (params.fasta) { ch_fasta = file(params.fasta) } else { exit 1, 'Fasta file not specified!' }
+if (params.fai) { ch_fai = file(params.fai) } else { exit 1, 'Fai file not specified!' }
+if (params.dict) { ch_dict = file(params.dict) } else { exit 1, 'Dict file not specified!' }
+if (params.index) { ch_index = file(params.index) } else { exit 1, 'Index file not specified!' }
+if (params.bed) { ch_bed = Channel.fromPath(params.bed) } else { ch_bed = [] }
+if (params.dgn_model) { ch_dgn_model = Channel.fromPath(params.dgn_model) } else { ch_dgn_model = [] }
+if (params.dbsnp) { ch_dbsnp = Channel.fromPath(params.dbsnp) } else { ch_dbsnp = [] }
+if (params.dbsnp_tbi) { ch_dbsnp_tbi = Channel.fromPath(params.dbsnp_tbi) } else { ch_dbsnp_tbi = [] }
+
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
@@ -36,6 +54,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
+include { FASTQ_ALIGN_BWA } from '../subworkflows/nf-core/fastq_align_bwa/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -49,6 +68,7 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 include { FASTQC                      } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { GATK4_HAPLOTYPECALLER } from '../modules/nf-core/gatk4/haplotypecaller/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,6 +101,29 @@ workflow SNVS {
         INPUT_CHECK.out.reads
     )
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+
+    FASTQ_ALIGN_BWA (
+        INPUT_CHECK.out.reads, tuple([], ch_index), true, tuple([], ch_fasta)
+    )
+
+    //ch_bed.view()
+    //ch_bambai = FASTQ_ALIGN_BWA.out.bam.join(FASTQ_ALIGN_BWA.out.bai).concat(ch_bed, ch_dgn_model ).collect()//.view()
+    if (params.bed) {
+        ch_bambai = FASTQ_ALIGN_BWA.out.bam.combine(FASTQ_ALIGN_BWA.out.bai).combine(ch_bed).map{ meta, bam, meta2, bai, intervals -> [ meta, bam, bai, intervals, [] ] }
+        } else {
+        ch_bambai = FASTQ_ALIGN_BWA.out.bam.combine(FASTQ_ALIGN_BWA.out.bai).map{ meta, bam, meta2, bai -> [ meta, bam, bai, [], [] ] }
+        }
+
+    ch_bambai.view()
+
+    GATK4_HAPLOTYPECALLER (
+        ch_bambai, 
+        tuple([], ch_fasta), 
+        tuple([], ch_fai), 
+        tuple([], ch_dict), 
+        tuple([], ch_dbsnp), 
+        tuple([], ch_dbsnp_tbi)
+    )
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
