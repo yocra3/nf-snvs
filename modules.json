@@ -35,9 +35,29 @@
             "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
             "installed_by": ["modules"]
           },
+          "gatk4/markduplicates": {
+            "branch": "master",
+            "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+            "installed_by": ["modules"]
+          },
           "gatk4/selectvariants": {
             "branch": "master",
             "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+            "installed_by": ["modules"]
+          },
+          "gatk4spark/applybqsr": {
+            "branch": "master",
+            "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+            "installed_by": ["modules"]
+          },
+          "gatk4spark/baserecalibrator": {
+            "branch": "master",
+            "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+            "installed_by": ["modules"]
+          },
+          "gatk4spark/markduplicates": {
+            "branch": "master",
+            "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
             "installed_by": ["modules"]
           },
           "multiqc": {
@@ -75,12 +95,12 @@
             "git_sha": "04fbbc7c43cebc0b95d5b126f6d9fe4effa33519",
             "installed_by": ["bam_stats_samtools"]
           },
-          "tabix/tabix": {
+          "tabix/bgzip": {
             "branch": "master",
             "git_sha": "964d13ef113ef654e2c7fe4530884b8927e2c25c",
             "installed_by": ["modules"]
           },
-          "tabix/bgzip": {
+          "tabix/tabix": {
             "branch": "master",
             "git_sha": "964d13ef113ef654e2c7fe4530884b8927e2c25c",
             "installed_by": ["modules"]
