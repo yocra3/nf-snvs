@@ -69,6 +69,8 @@ include { FASTQC                      } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { GATK4_HAPLOTYPECALLER } from '../modules/nf-core/gatk4/haplotypecaller/main'
+include { GATK4SPARK_MARKDUPLICATES  } from '../modules/nf-core/gatk4spark/markduplicates/main'
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -106,6 +108,18 @@ workflow SNVS {
         INPUT_CHECK.out.reads, tuple([], ch_index), true, tuple([], ch_fasta)
     )
 
+
+    GATK4SPARK_MARKDUPLICATES (
+        FASTQ_ALIGN_BWA.out.bam,
+        ch_fasta, 
+        ch_fai,
+        ch_dict
+    )
+
+    GATK4SPARK_MARKDUPLICATES.out.output.view()
+
+    //GATK4SPARK_BASERECALIBRATOR ()
+
     //ch_bed.view()
     //ch_bambai = FASTQ_ALIGN_BWA.out.bam.join(FASTQ_ALIGN_BWA.out.bai).concat(ch_bed, ch_dgn_model ).collect()//.view()
     if (params.bed) {
@@ -116,14 +130,17 @@ workflow SNVS {
 
     ch_bambai.view()
 
-    GATK4_HAPLOTYPECALLER (
-        ch_bambai, 
-        tuple([], ch_fasta), 
-        tuple([], ch_fai), 
-        tuple([], ch_dict), 
-        tuple([], ch_dbsnp), 
-        tuple([], ch_dbsnp_tbi)
-    )
+
+
+
+    //GATK4_HAPLOTYPECALLER (
+    //    ch_bambai, 
+    //    tuple([], ch_fasta), 
+    //    tuple([], ch_fai), 
+    //    tuple([], ch_dict), 
+    //    tuple([], ch_dbsnp), 
+    //    tuple([], ch_dbsnp_tbi)
+    //)
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
