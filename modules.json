@@ -75,12 +75,12 @@
             "git_sha": "04fbbc7c43cebc0b95d5b126f6d9fe4effa33519",
             "installed_by": ["bam_stats_samtools"]
           },
-          "tabix/tabix": {
+          "tabix/bgzip": {
             "branch": "master",
             "git_sha": "964d13ef113ef654e2c7fe4530884b8927e2c25c",
             "installed_by": ["modules"]
           },
-          "tabix/bgzip": {
+          "tabix/tabix": {
             "branch": "master",
             "git_sha": "964d13ef113ef654e2c7fe4530884b8927e2c25c",
             "installed_by": ["modules"]
