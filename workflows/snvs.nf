@@ -68,8 +68,17 @@ include { FASTQ_ALIGN_BWA } from '../subworkflows/nf-core/fastq_align_bwa/main'
 include { FASTQC                      } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+
+include { BWA_MEM               } from '../modules/nf-core/bwa/mem/main'
+include { GATK4_FASTQTOSAM  } from '../modules/nf-core/gatk4/fastqtosam/main'
+include { SAMTOOLS_SORT     } from '../modules/nf-core/samtools/sort/main'
+include { SAMTOOLS_SORT  as  SAMTOOLS_SORT_MAPPED  } from '../modules/nf-core/samtools/sort/main'
+include { GATK4_MERGEBAMALIGNMENT  } from '../modules/nf-core/gatk4/mergebamalignment/main'
+include { GATK4_ADDORREPLACEREADGROUPS } from '../modules/nf-core/gatk4/addorreplacereadgroups/main' 
+
 include { GATK4_HAPLOTYPECALLER } from '../modules/nf-core/gatk4/haplotypecaller/main'
 include { GATK4SPARK_MARKDUPLICATES  } from '../modules/nf-core/gatk4spark/markduplicates/main'
+include { PICARD_ADDORREPLACEREADGROUPS } from '../modules/nf-core/picard/addorreplacereadgroups/main'                                     
 
 
 /*
@@ -104,43 +113,84 @@ workflow SNVS {
     )
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
-    FASTQ_ALIGN_BWA (
-        INPUT_CHECK.out.reads, tuple([], ch_index), true, tuple([], ch_fasta)
+    //FASTQ_ALIGN_BWA (
+    //    INPUT_CHECK.out.reads, tuple([], ch_index), false, tuple([], ch_fasta)
+    //)
+
+    BWA_MEM(
+        INPUT_CHECK.out.reads,
+        tuple([], ch_index),
+        tuple([], ch_fasta),
+        true
     )
 
+    PICARD_ADDORREPLACEREADGROUPS (
+        BWA_MEM.out.bam,
+        tuple([], ch_fasta),
+        tuple([], ch_fai)
+    )
+
+    
+    GATK4_FASTQTOSAM (
+        INPUT_CHECK.out.reads
+    )
+
+    SAMTOOLS_SORT (
+        GATK4_FASTQTOSAM.out.bam,
+        tuple([], ch_fasta)
+
+    )
+
+    SAMTOOLS_SORT_MAPPED (
+        PICARD_ADDORREPLACEREADGROUPS.out.bam,
+        tuple([], ch_fasta)
+
+    )
+
+    //SAMTOOLS_SORT_MAPPED.out.bam.join(SAMTOOLS_SORT.out.bam).view()
+    //GATK4_FASTQTOSAM.out.bam.view()
+
+    //GATK4_MERGEBAMALIGNMENT (
+//
+  //      SAMTOOLS_SORT_MAPPED.out.bam.join(SAMTOOLS_SORT.out.bam),
+    //    tuple([], ch_fasta), 
+    //    tuple([], ch_dict)
+    //)
+
+    //GATK4_MERGEBAMALIGNMENT.out.bam.view()
 
     GATK4SPARK_MARKDUPLICATES (
-        FASTQ_ALIGN_BWA.out.bam,
+        PICARD_ADDORREPLACEREADGROUPS.out.bam,
         ch_fasta, 
         ch_fai,
         ch_dict
     )
 
-    GATK4SPARK_MARKDUPLICATES.out.output.view()
+    //GATK4SPARK_MARKDUPLICATES.out.output.view()
 
     //GATK4SPARK_BASERECALIBRATOR ()
 
     //ch_bed.view()
     //ch_bambai = FASTQ_ALIGN_BWA.out.bam.join(FASTQ_ALIGN_BWA.out.bai).concat(ch_bed, ch_dgn_model ).collect()//.view()
     if (params.bed) {
-        ch_bambai = FASTQ_ALIGN_BWA.out.bam.combine(FASTQ_ALIGN_BWA.out.bai).combine(ch_bed).map{ meta, bam, meta2, bai, intervals -> [ meta, bam, bai, intervals, [] ] }
+        ch_bambai = PICARD_ADDORREPLACEREADGROUPS.out.bam.combine(PICARD_ADDORREPLACEREADGROUPS.out.bai).combine(ch_bed).map{ meta, bam, meta2, bai, intervals -> [ meta, bam, bai, intervals, [] ] }
         } else {
-        ch_bambai = FASTQ_ALIGN_BWA.out.bam.combine(FASTQ_ALIGN_BWA.out.bai).map{ meta, bam, meta2, bai -> [ meta, bam, bai, [], [] ] }
-        }
-
+        ch_bambai = PICARD_ADDORREPLACEREADGROUPS.out.bam.combine(PICARD_ADDORREPLACEREADGROUPS.out.bai).map{ meta, bam, meta2, bai -> [ meta, bam, bai, [], [] ] }
+    }
+    PICARD_ADDORREPLACEREADGROUPS.out.bai.view()
     ch_bambai.view()
 
 
 
 
-    //GATK4_HAPLOTYPECALLER (
-    //    ch_bambai, 
-    //    tuple([], ch_fasta), 
-    //    tuple([], ch_fai), 
-    //    tuple([], ch_dict), 
-    //    tuple([], ch_dbsnp), 
-    //    tuple([], ch_dbsnp_tbi)
-    //)
+    GATK4_HAPLOTYPECALLER (
+        ch_bambai, 
+        tuple([], ch_fasta), 
+        tuple([], ch_fai), 
+        tuple([], ch_dict), 
+        tuple([], ch_dbsnp), 
+        tuple([], ch_dbsnp_tbi)
+    )
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
