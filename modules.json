@@ -30,12 +30,22 @@
             "git_sha": "c9488585ce7bd35ccd2a30faa2371454c8112fb9",
             "installed_by": ["modules"]
           },
+          "gatk4/fastqtosam": {
+            "branch": "master",
+            "git_sha": "679f45cae4f603f12d7c38c042afee11150574a0",
+            "installed_by": ["modules"]
+          },
           "gatk4/haplotypecaller": {
             "branch": "master",
             "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
             "installed_by": ["modules"]
           },
           "gatk4/markduplicates": {
+            "branch": "master",
+            "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+            "installed_by": ["modules"]
+          },
+          "gatk4/mergebamalignment": {
             "branch": "master",
             "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
             "installed_by": ["modules"]
