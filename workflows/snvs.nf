@@ -177,10 +177,8 @@ workflow SNVS {
         } else {
         ch_bambai = PICARD_ADDORREPLACEREADGROUPS.out.bam.combine(PICARD_ADDORREPLACEREADGROUPS.out.bai).map{ meta, bam, meta2, bai -> [ meta, bam, bai, [], [] ] }
     }
-    PICARD_ADDORREPLACEREADGROUPS.out.bai.view()
-    ch_bambai.view()
-
-
+    //PICARD_ADDORREPLACEREADGROUPS.out.bai.view()
+    //ch_bambai.view()
 
 
     GATK4_HAPLOTYPECALLER (
