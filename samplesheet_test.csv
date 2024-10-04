@@ -1,0 +1,2 @@
+sample,fastq_1,fastq_2,bed
+"Sample_zenodo","https://zenodo.org/records/13838219/files/my_R1.fastq","https://zenodo.org/records/13838219/files/my_R2.fastq","https://zenodo.org/records/11185276/files/my.bed"
