@@ -25,15 +25,6 @@ WorkflowSnvs.initialise(params, log)
 
 // Check mandatory parameters
 
-//if (params.fasta) { ch_fasta = Channel.fromPath(params.fasta) } else { exit 1, 'Fasta file not specified!' }
-//if (params.fai) { ch_fai = Channel.fromPath(params.fai) } else { exit 1, 'Fai file not specified!' }
-//if (params.refdict) { ch_refdict = file(params.refdict) } else { exit 1, 'Dict file not specified!' }
-//if (params.index) { ch_index = file(params.index) } else { exit 1, 'Index file not specified!' }
-//if (params.bed) { ch_bed = Channel.fromPath(params.bed) } else { ch_bed = [] }
-//if (params.dgn_model) { ch_dgn_model = Channel.fromPath(params.dgn_model) } else { ch_dgn_model = [] }
-//if (params.dbsnp) { ch_dbsnp = Channel.fromPath(params.dbsnp) } else { ch_dbsnp = [] }
-//if (params.dbsnp_tbi) { ch_dbsnp_tbi = Channel.fromPath(params.dbsnp_tbi) } else { ch_dbsnp_tbi = [] }
-
 ch_fasta   = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
 ch_fai   = params.fai ? Channel.fromPath(params.fai).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
 
