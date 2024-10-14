@@ -25,14 +25,18 @@ WorkflowSnvs.initialise(params, log)
 
 // Check mandatory parameters
 
-if (params.fasta) { ch_fasta = file(params.fasta) } else { exit 1, 'Fasta file not specified!' }
-if (params.fai) { ch_fai = file(params.fai) } else { exit 1, 'Fai file not specified!' }
+//if (params.fasta) { ch_fasta = Channel.fromPath(params.fasta) } else { exit 1, 'Fasta file not specified!' }
+//if (params.fai) { ch_fai = Channel.fromPath(params.fai) } else { exit 1, 'Fai file not specified!' }
 //if (params.refdict) { ch_refdict = file(params.refdict) } else { exit 1, 'Dict file not specified!' }
 //if (params.index) { ch_index = file(params.index) } else { exit 1, 'Index file not specified!' }
 //if (params.bed) { ch_bed = Channel.fromPath(params.bed) } else { ch_bed = [] }
 //if (params.dgn_model) { ch_dgn_model = Channel.fromPath(params.dgn_model) } else { ch_dgn_model = [] }
 //if (params.dbsnp) { ch_dbsnp = Channel.fromPath(params.dbsnp) } else { ch_dbsnp = [] }
 //if (params.dbsnp_tbi) { ch_dbsnp_tbi = Channel.fromPath(params.dbsnp_tbi) } else { ch_dbsnp_tbi = [] }
+
+ch_fasta   = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
+ch_fai   = params.fai ? Channel.fromPath(params.fai).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
+
 
 
 /*
@@ -97,26 +101,24 @@ workflow SNVS {
     // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
     // ! There is currently no tooling to help you write a sample sheet schema
 
-    //
+    // 
     // MODULE: Run FastQC
     //
     FASTQC (
         INPUT_CHECK.out.reads
     )
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
-
-
+     
     if (params.index) { ch_index = tuple([],file(params.index)) } else { 
     BWA_INDEX (
-        tuple([], ch_fasta)
+        ch_fasta
         )
     ch_index = BWA_INDEX.out.index
     }
-
-
+    
     if (params.refdict) { ch_refdict = tuple([],file(params.refdict)) } else { 
     PICARD_CREATESEQUENCEDICTIONARY (
-        tuple([], ch_fasta)
+        ch_fasta
         )
     ch_refdict = PICARD_CREATESEQUENCEDICTIONARY.out.reference_dict
     }
