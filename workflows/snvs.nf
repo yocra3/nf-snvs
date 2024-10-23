@@ -15,6 +15,21 @@ log.info logo + paramsSummaryLog(workflow) + citation
 
 WorkflowSnvs.initialise(params, log)
 
+
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    VALIDATE INPUTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+// Check mandatory parameters
+
+ch_fasta   = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
+ch_fai   = params.fai ? Channel.fromPath(params.fai).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
+
+
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -50,6 +65,9 @@ include { FASTQC                      } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
+include { BWA_INDEX } from '../modules/nf-core/bwa/index/main'
+include { PICARD_CREATESEQUENCEDICTIONARY } from '../modules/nf-core/picard/createsequencedictionary/main'                                                                                                                                                                        
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -74,13 +92,27 @@ workflow SNVS {
     // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
     // ! There is currently no tooling to help you write a sample sheet schema
 
-    //
+    // 
     // MODULE: Run FastQC
     //
     FASTQC (
         INPUT_CHECK.out.reads
     )
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+     
+    if (params.index) { ch_index = tuple([],file(params.index)) } else { 
+    BWA_INDEX (
+        ch_fasta
+        )
+    ch_index = BWA_INDEX.out.index
+    }
+    
+    if (params.refdict) { ch_refdict = tuple([],file(params.refdict)) } else { 
+    PICARD_CREATESEQUENCEDICTIONARY (
+        ch_fasta
+        )
+    ch_refdict = PICARD_CREATESEQUENCEDICTIONARY.out.reference_dict
+    }
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')

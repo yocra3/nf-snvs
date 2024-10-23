@@ -5,6 +5,11 @@
     "https://github.com/nf-core/modules.git": {
       "modules": {
         "nf-core": {
+          "bwa/index": {
+            "branch": "master",
+            "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+            "installed_by": ["modules"]
+          },
           "bwa/mem": {
             "branch": "master",
             "git_sha": "e0ff65e1fb313677de09f5f477ae3da30ce19b7b",
@@ -45,6 +50,11 @@
             "git_sha": "8ec825f465b9c17f9d83000022995b4f7de6fe93",
             "installed_by": ["modules"]
           },
+          "picard/createsequencedictionary": {
+            "branch": "master",
+            "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+            "installed_by": ["modules"]
+          },
           "picard/sortvcf": {
             "branch": "master",
             "git_sha": "20b0918591d4ba20047d7e13e5094bcceba81447",
@@ -75,12 +85,12 @@
             "git_sha": "04fbbc7c43cebc0b95d5b126f6d9fe4effa33519",
             "installed_by": ["bam_stats_samtools"]
           },
-          "tabix/tabix": {
+          "tabix/bgzip": {
             "branch": "master",
             "git_sha": "964d13ef113ef654e2c7fe4530884b8927e2c25c",
             "installed_by": ["modules"]
           },
-          "tabix/bgzip": {
+          "tabix/tabix": {
             "branch": "master",
             "git_sha": "964d13ef113ef654e2c7fe4530884b8927e2c25c",
             "installed_by": ["modules"]
