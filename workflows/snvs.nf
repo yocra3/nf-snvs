@@ -51,6 +51,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
+include { MAPPING } from '../subworkflows/local/mapping'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -113,6 +114,18 @@ workflow SNVS {
         )
     ch_refdict = PICARD_CREATESEQUENCEDICTIONARY.out.reference_dict
     }
+
+    ch_fai.view()
+    
+    MAPPING (
+        INPUT_CHECK.out.reads,
+        ch_index,
+        ch_fasta,
+        ch_fai,
+        ch_refdict
+    )
+
+    MAPPING.out.bam.view()
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')

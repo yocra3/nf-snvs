@@ -35,14 +35,39 @@
             "git_sha": "c9488585ce7bd35ccd2a30faa2371454c8112fb9",
             "installed_by": ["modules"]
           },
+          "gatk4/applybqsr": {
+            "branch": "master",
+            "git_sha": "6b3bf38285d94cc1ea3cd9fa93310d54b04c3819",
+            "installed_by": ["modules"]
+          },
+          "gatk4/baserecalibrator": {
+            "branch": "master",
+            "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+            "installed_by": ["modules"]
+          },
+          "gatk4/fastqtosam": {
+            "branch": "master",
+            "git_sha": "679f45cae4f603f12d7c38c042afee11150574a0",
+            "installed_by": ["modules"]
+          },
           "gatk4/haplotypecaller": {
             "branch": "master",
             "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
             "installed_by": ["modules"]
           },
+          "gatk4/mergebamalignment": {
+            "branch": "master",
+            "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+            "installed_by": ["modules"]
+          },
           "gatk4/selectvariants": {
             "branch": "master",
             "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+            "installed_by": ["modules"]
+          },
+          "gatk4spark/markduplicates": {
+            "branch": "master",
+            "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
             "installed_by": ["modules"]
           },
           "multiqc": {
@@ -53,6 +78,11 @@
           "picard/createsequencedictionary": {
             "branch": "master",
             "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+            "installed_by": ["modules"]
+          },
+          "picard/sortsam": {
+            "branch": "master",
+            "git_sha": "49f4e50534fe4b64101e62ea41d5dc43b1324358",
             "installed_by": ["modules"]
           },
           "picard/sortvcf": {
