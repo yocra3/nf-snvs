@@ -17,6 +17,9 @@ workflow MAPPING {
     ch_fasta        // channel (optional) : [ val(meta3), path(fasta) ]
     ch_fai
     ch_refdict
+    ch_intervals
+    ch_known_sites
+    ch_known_sites_tbi
 
     main:
     BWA_MEM (
@@ -43,6 +46,19 @@ workflow MAPPING {
         ch_fai.map {meta, fai -> [fai]}, 
         ch_refdict.map {meta, dict -> [dict]}
     )
+
+    ch_known_sites.view()
+
+    GATK4SPARK_MARKDUPLICATES.out.output.join(GATK4SPARK_MARKDUPLICATES.out.bam_index.combine(ch_intervals)).view()
+
+    GATK4_BASERECALIBRATOR (   
+        GATK4SPARK_MARKDUPLICATES.out.output.join(GATK4SPARK_MARKDUPLICATES.out.bam_index.combine(ch_intervals)),
+        ch_fasta.map {meta , fasta -> [fasta]},
+        ch_fai.map {meta, fai -> [fai]}, 
+        ch_refdict.map {meta, dict -> [dict]},
+        ch_known_sites,
+        ch_known_sites_tbi
+     )
     
     emit:
     bam = BWA_MEM.out.bam // channel: [ val(meta), path(bam)]

@@ -27,7 +27,10 @@ WorkflowSnvs.initialise(params, log)
 
 ch_fasta   = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
 ch_fai   = params.fai ? Channel.fromPath(params.fai).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
+ch_known_sites = params.known_sites ? Channel.fromPath(params.known_sites) : Channel.empty()
+ch_known_sites_tbi = params.known_sites_tbi ? Channel.fromPath(params.known_sites_tbi) : Channel.empty()
 
+ch_intervals = params.intervals ? Channel.fromPath(params.intervals) : Channel.value("")
 
 
 /*
@@ -115,17 +118,20 @@ workflow SNVS {
     ch_refdict = PICARD_CREATESEQUENCEDICTIONARY.out.reference_dict
     }
 
-    ch_fai.view()
+    //ch_fai.view()
     
     MAPPING (
         INPUT_CHECK.out.reads,
         ch_index,
         ch_fasta,
         ch_fai,
-        ch_refdict
+        ch_refdict,
+        ch_intervals,
+        ch_known_sites,
+        ch_known_sites_tbi
     )
 
-    MAPPING.out.bam.view()
+    //MAPPING.out.bam.view()
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
