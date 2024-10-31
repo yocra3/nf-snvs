@@ -1,0 +1,79 @@
+nextflow_workflow {
+
+    name "Test Subworkflow MAPPING"
+    script "../main.nf"
+    workflow "MAPPING"
+
+    tag "subworkflows"
+    tag "subworkflows/mapping"
+    tag "bwa"
+    tag "bwa/mem"
+    tag "gatk4"
+    tag "gatk4/fastqtosam"
+    tag "gatk4/mergebamalignment"
+    tag "gatk4/fastqtosam"
+    tag "gatk4/baserecalibrator"
+    tag "gatk4/applybqr"
+    tag "gatk4spark"
+    tag "gatk4spark/markduplicates"    
+    tag "picard"
+    tag "picard/sortsam"
+
+    test("mapping - fastq - with intervals") {
+
+        setup {
+
+            run("BWA_INDEX") {
+                script "../../../../modules/nf-core/bwa/index/main.nf"
+                process {
+                    """
+                    input[0] = [
+                        [ id: 'test'],
+                        file("https://zenodo.org/records/11119470/files/chr17_var_regions.fa", checkIfExists: true),
+                    ]
+                    """
+                }
+            }
+            run("PICARD_CREATESEQUENCEDICTIONARY") {
+                script "../../../../modules/nf-core/picard/createsequencedictionary/main.nf"
+                process {
+                    """
+                    input[0] = [
+                        [ id: 'chr17_var_regions'],
+                        file("https://zenodo.org/records/11119470/files/chr17_var_regions.fa", checkIfExists: true),
+                    ]
+                    """
+                }
+            }
+        }
+
+        when {
+            workflow {
+                """
+                input[0] = [
+                    [ id : 'Sample_zenodo' ],
+                    file("https://zenodo.org/records/13838219/files/my_R1.fastq", checkIfExists: true),
+                    file("https://zenodo.org/records/13838219/files/my_R2.fastq", checkIfExists: true)
+                ]
+                input[1] = BWA_INDEX.out.index
+                input[2] =  [
+                        [ id: 'test'],
+                        file("https://zenodo.org/records/11119470/files/chr17_var_regions.fa", checkIfExists: true)
+                    ]
+                input[3] = file("https://zenodo.org/records/11119470/files/chr17_var_regions.fa.fai", checkIfExists: true)
+                input[4] = PICARD_CREATESEQUENCEDICTIONARY.out.reference_dict
+                input[5] = file("https://zenodo.org/records/11185276/files/my.bed", checkIfExists: true)
+                input[6] = []
+                input[7] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+}
