@@ -7,7 +7,7 @@ process AUTOMAP {
     container "/home/gonzalo/singularity_images/bioinfotools_2.0.0.sif"
     
     input:
-    tuple val(meta), path(final_vcf), path(tbi)
+    tuple val(meta), path(vcf), path(tbi)
     val automap_assembly
     path projectDir
 
@@ -24,10 +24,10 @@ process AUTOMAP {
     
     if ( task.attempt == 1 )
         """
-        if [[ \$(bcftools query -l ${final_vcf} | wc -l) -gt 1 ]]; then
-		    for sample in \$(bcftools query -l ${final_vcf}); do
+        if [[ \$(bcftools query -l ${vcf} | wc -l) -gt 1 ]]; then
+		    for sample in \$(bcftools query -l ${vcf}); do
 
-			    bcftools view -s \${sample} -O v -o \${sample}.indv.vcf ${final_vcf}
+			    bcftools view -s \${sample} -O v -o \${sample}.indv.vcf ${vcf}
 					
 			    bash ${projectDir}/bin/AutoMap/AutoMap_v1.3.sh \\
 			    --vcf \${sample}.indv.vcf \\
@@ -40,14 +40,14 @@ process AUTOMAP {
 			
 	    else
 					
-		    bcftools view -O v -o ${final_vcf}.vcf ${final_vcf}
+		    bcftools view -O v -o ${vcf}.vcf ${vcf}
 
 		    bash ${projectDir}/bin/AutoMap/AutoMap_v1.3.sh \\
-		    --vcf ${final_vcf}.vcf \\
+		    --vcf ${vcf}.vcf \\
 		    --out . \\
 		    --genome ${automap_assembly}
 
-		    mv \$(bcftools query -l ${final_vcf})/*HomRegions* .
+		    mv \$(bcftools query -l ${vcf})/*HomRegions* .
 
 	    fi
         

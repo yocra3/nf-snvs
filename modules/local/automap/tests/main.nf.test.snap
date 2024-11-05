@@ -1,0 +1,37 @@
+{
+    "automap - vcf": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_no_automap_HomRegions.txt:md5,ea9bafb7bf163b9fb03a570c80ba6db7"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,a56992ba64c5c66e3b52d5cf0bf654aa"
+                ],
+                "roh_automap": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_no_automap_HomRegions.txt:md5,ea9bafb7bf163b9fb03a570c80ba6db7"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a56992ba64c5c66e3b52d5cf0bf654aa"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-11-05T15:10:36.005897289"
+    }
+}
