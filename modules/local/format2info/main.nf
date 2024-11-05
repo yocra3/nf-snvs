@@ -2,7 +2,6 @@ process FORMAT2INFO {
     tag "$meta.id"
     label 'process_single'
 
-    // Conda is not supported
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bcftools:1.20--h8b25389_0':
         'biocontainers/bcftools:1.20--h8b25389_0' }"
