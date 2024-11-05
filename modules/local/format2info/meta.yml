@@ -12,11 +12,6 @@ tools:
       description: "format2info module takes FORMAT field from vcf file and merge it with INFO field. 
       In addition, it extracts the name of the values in this new INFO field and save them in a text file. 
       Both files, resulting vcf and text file are used to add sample info in the annotation step with VEP using --custom parameter."
-      homepage: ""
-      documentation: ""
-      tool_dev_url: ""
-      doi: ""
-      licence: 
 
 input:
   - meta:
@@ -36,22 +31,40 @@ input:
       pattern: "*.{vcf.gz.tbi}"
 
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. `[ id:'sample1', single_end:false ]`
-  
+
   - vcf_to_annotate:
-      type: file
-      description: vcf file containing FORMAT+INFO fields for annotation
-      pattern: "*.vcf_to_annotate.vcf"
+    - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - vcf_to_annotate:
+        type: file
+        description: vcf file containing FORMAT+INFO fields for annotation
+        pattern: "*.vcf_to_annotate.vcf"
+
   - fields:
-      type: file
-      description: text file with FORMAT+INFO fields column names for annotation with VEP
-      pattern: "*.fields.txt"
+    - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+    - fields:
+        type: file
+        description: text file with FORMAT+INFO fields column names for annotation with VEP
+        pattern: "*.fields.txt"
+  
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 
 authors:
   - "@rafafariasvarona"
+  - "@yolandabq"
+  - "@guriaregojo"
 maintainers:
   - "@rafafariasvarona"
+  - "@yolandabq"
+  - "@guriaregojo"
