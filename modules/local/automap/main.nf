@@ -4,7 +4,7 @@ process AUTOMAP {
     errorStrategy 'retry'
 
     // Conda is not supported
-    container "/home/gonzalo/singularity_images/bioinfotools_2.0.0.sif"
+    container "/mnt/tblab/yolanda/automap/automap.sif"
     
     input:
     tuple val(meta), path(vcf), path(tbi)
@@ -29,7 +29,7 @@ process AUTOMAP {
 
 			    bcftools view -s \${sample} -O v -o \${sample}.indv.vcf ${vcf}
 					
-			    bash ${projectDir}/bin/AutoMap/AutoMap_v1.3.sh \\
+			    bash /app/AutoMap_v1.3.sh \\
 			    --vcf \${sample}.indv.vcf \\
 			    --out . \\
 			    --genome ${automap_assembly}
@@ -42,7 +42,7 @@ process AUTOMAP {
 					
 		    bcftools view -O v -o ${vcf}.vcf ${vcf}
 
-		    bash ${projectDir}/bin/AutoMap/AutoMap_v1.3.sh \\
+		    bash /app/AutoMap_v1.3.sh \\
 		    --vcf ${vcf}.vcf \\
 		    --out . \\
 		    --genome ${automap_assembly}
