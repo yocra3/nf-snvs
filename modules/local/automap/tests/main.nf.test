@@ -18,8 +18,8 @@ nextflow_process {
                 """                
                 input[0] = [
                     [ id:'test', single_end:false ], // meta map
-                    file("/mnt/tblab/GURYBQ/test.vcf.gz", checkIfExists: true),
-                    file("/mnt/tblab/GURYBQ/test.vcf.gz.tbi", checkIfExists: true)
+                    file("/mnt/tblab/GURYBQ/10-1918.hg38.final.vcf.gz", checkIfExists: true),
+                    file("/mnt/tblab/GURYBQ/10-1918.hg38.final.vcf.gz.tbi", checkIfExists: true)
                 ]
                 input[1] = "hg38"
                 input[2] = "${projectDir}"
