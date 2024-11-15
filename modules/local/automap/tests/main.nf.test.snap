@@ -1,0 +1,43 @@
+{
+    "automap - vcf": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "10-1918.HomRegions.pdf:md5,246fd868eab01114d31420c992d1cc24",
+                            "10-1918.HomRegions.tsv:md5,48928f23c6ff528a7ef5cf9ea9d3c7ae"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,db647745175c1b36911a7e1290d82a74"
+                ],
+                "roh_automap": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "10-1918.HomRegions.pdf:md5,246fd868eab01114d31420c992d1cc24",
+                            "10-1918.HomRegions.tsv:md5,48928f23c6ff528a7ef5cf9ea9d3c7ae"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,db647745175c1b36911a7e1290d82a74"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-11-12T13:23:08.87226653"
+    }
+}
