@@ -1,3 +1,4 @@
+
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -6,6 +7,7 @@
     Github : https://github.com/GdTBioinfo-nf/snvs
 ----------------------------------------------------------------------------------------
 */
+include { SpliceAI } from './modules/spliceai/spliceai.nf'
 
 nextflow.enable.dsl = 2
 
@@ -69,8 +71,10 @@ workflow GDTBIOINFONF_SNVS {
 // WORKFLOW: Execute a single named workflow for the pipeline
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
+// En tu flujo de trabajo principal
 workflow {
     GDTBIOINFONF_SNVS ()
+    SpliceAI(vcf_file: 'ruta/al/archivo.vcf')
 }
 
 /*
