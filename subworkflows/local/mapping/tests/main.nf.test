@@ -19,52 +19,100 @@ nextflow_workflow {
     tag "picard"
     tag "picard/sortsam"
 
-    test("mapping - fastq - with intervals") {
 
-        setup {
+    setup {
 
-            run("BWA_INDEX") {
-                script "../../../../modules/nf-core/bwa/index/main.nf"
-                process {
-                    """
-                    input[0] = [
-                        [ id: 'test'],
-                        file("https://zenodo.org/records/11119470/files/chr17_var_regions.fa", checkIfExists: true),
-                    ]
-                    """
-                }
-            }
-            run("PICARD_CREATESEQUENCEDICTIONARY") {
-                script "../../../../modules/nf-core/picard/createsequencedictionary/main.nf"
-                process {
-                    """
-                    input[0] = [
-                        [ id: 'chr17_var_regions'],
-                        file("https://zenodo.org/records/11119470/files/chr17_var_regions.fa", checkIfExists: true),
-                    ]
-                    """
-                }
+        run("BWA_INDEX") {
+            script "../../../../modules/nf-core/bwa/index/main.nf"
+            process {
+                """
+                input[0] = [
+                    [ id: 'genome'],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ]
+                """
             }
         }
+        run("PICARD_CREATESEQUENCEDICTIONARY") {
+            script "../../../../modules/nf-core/picard/createsequencedictionary/main.nf"
+            process {
+                """
+                input[0] = [
+                    [ id: 'genome'],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ]
+                """
+            }
+        }
+    }
+
+    test("mapping - fastq - with intervals") {
+
 
         when {
             workflow {
                 """
                 input[0] = [
                     [ id : 'Sample_zenodo' ],
-                    file("https://zenodo.org/records/13838219/files/my_R1.fastq", checkIfExists: true),
-                    file("https://zenodo.org/records/13838219/files/my_R2.fastq", checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                 ]
                 input[1] = BWA_INDEX.out.index
-                input[2] =  [
-                        [ id: 'test'],
-                        file("https://zenodo.org/records/11119470/files/chr17_var_regions.fa", checkIfExists: true)
-                    ]
-                input[3] = file("https://zenodo.org/records/11119470/files/chr17_var_regions.fa.fai", checkIfExists: true)
+                input[2] =  Channel.fromList([
+                        tuple([ id: 'genome'],
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                    ])
+                input[3] =  Channel.fromList([
+                        tuple([ id: 'genome'],
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                    ])
                 input[4] = PICARD_CREATESEQUENCEDICTIONARY.out.reference_dict
-                input[5] = file("https://zenodo.org/records/11185276/files/my.bed", checkIfExists: true)
-                input[6] = []
-                input[7] = []
+                input[5] =  Channel.fromList([
+                        tuple([ id: 'Sample_zenodo'],
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.bed', checkIfExists: true))
+                    ])
+                input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz', checkIfExists: true)
+                input[7] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz.tbi', checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+
+
+        test("mapping - fastq - without intervals") {
+
+
+        when {
+            workflow {
+                """
+                input[0] = [
+                    [ id : 'Sample_zenodo' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                ]
+                input[1] = BWA_INDEX.out.index
+                input[2] =  Channel.fromList([
+                        tuple([ id: 'genome'],
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                    ])
+                input[3] =  Channel.fromList([
+                        tuple([ id: 'genome'],
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                    ])
+                input[4] = PICARD_CREATESEQUENCEDICTIONARY.out.reference_dict
+                input[5] =  Channel.fromList([
+                            tuple([ id: 'Sample_zenodo'],
+                            [])
+                        ])
+                input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz', checkIfExists: true)
+                input[7] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz.tbi', checkIfExists: true)
                 """
             }
         }

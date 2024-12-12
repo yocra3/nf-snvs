@@ -1,0 +1,56 @@
+{
+    "mapping - fastq - with intervals": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "Sample_zenodo"
+                        },
+                        "Sample_zenodo.bam:md5,e4e1d9a9d9368ee4eba1ef9e546b169d"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "Sample_zenodo"
+                        },
+                        "Sample_zenodo.bam:md5,e4e1d9a9d9368ee4eba1ef9e546b169d"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-12-12T14:41:20.844735172"
+    },
+    "mapping - fastq - without intervals": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "Sample_zenodo"
+                        },
+                        "Sample_zenodo.bam:md5,b7d533d102ab0efd8b29c799a978a39a"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "Sample_zenodo"
+                        },
+                        "Sample_zenodo.bam:md5,b7d533d102ab0efd8b29c799a978a39a"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-12-12T14:42:12.511760065"
+    }
+}

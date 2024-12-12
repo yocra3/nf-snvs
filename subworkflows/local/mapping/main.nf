@@ -22,6 +22,7 @@ workflow MAPPING {
     ch_known_sites_tbi
 
     main:
+
     BWA_MEM (
         ch_reads,
         ch_index,
@@ -39,28 +40,39 @@ workflow MAPPING {
         ch_refdict
     )
 
+    GATK4_MERGEBAMALIGNMENT.out.bam.view()
 
-    // GATK4SPARK_MARKDUPLICATES (
-    //     GATK4_MERGEBAMALIGNMENT.out.bam,
-    //     ch_fasta.map {meta , fasta -> [fasta]},
-    //     ch_fai.map {meta, fai -> [fai]}, 
-    //     ch_refdict.map {meta, dict -> [dict]}
-    // )
+
+    GATK4SPARK_MARKDUPLICATES (
+        GATK4_MERGEBAMALIGNMENT.out.bam,
+        ch_fasta.map {meta , fasta -> [fasta]},
+        ch_fai.map {meta, fai -> [fai]}, 
+        ch_refdict.map {meta, dict -> [dict]}
+    )
+
 
     // ch_known_sites.view()
 
-    // GATK4SPARK_MARKDUPLICATES.out.output.join(GATK4SPARK_MARKDUPLICATES.out.bam_index.combine(ch_intervals)).view()
+    //GATK4SPARK_MARKDUPLICATES.out.output.join(GATK4SPARK_MARKDUPLICATES.out.bam_index.combine(ch_intervals)).view()
+    //GATK4SPARK_MARKDUPLICATES.out.output.join(GATK4SPARK_MARKDUPLICATES.out.bam_index.join(ch_intervals)).view()
 
-    // GATK4_BASERECALIBRATOR (   
-    //     GATK4SPARK_MARKDUPLICATES.out.output.join(GATK4SPARK_MARKDUPLICATES.out.bam_index.combine(ch_intervals)),
-    //     ch_fasta.map {meta , fasta -> [fasta]},
-    //     ch_fai.map {meta, fai -> [fai]}, 
-    //     ch_refdict.map {meta, dict -> [dict]},
-    //     ch_known_sites,
-    //     ch_known_sites_tbi
-    //  )
+    GATK4_BASERECALIBRATOR (   
+         GATK4SPARK_MARKDUPLICATES.out.output.join(GATK4SPARK_MARKDUPLICATES.out.bam_index.join(ch_intervals)),
+         ch_fasta.map {meta , fasta -> [fasta]},
+         ch_fai.map {meta, fai -> [fai]}, 
+         ch_refdict.map {meta, dict -> [dict]},
+         ch_known_sites,
+         ch_known_sites_tbi
+   )
+
+   GATK4_APPLYBQSR (
+        GATK4SPARK_MARKDUPLICATES.out.output.join(GATK4SPARK_MARKDUPLICATES.out.bam_index).join(GATK4_BASERECALIBRATOR.out.table).join(ch_intervals),
+        ch_fasta.map {meta , fasta -> [fasta]},
+        ch_fai.map {meta, fai -> [fai]}, 
+        ch_refdict.map {meta, dict -> [dict]}
+   )
     
     emit:
-    bam = BWA_MEM.out.bam // channel: [ val(meta), path(bam)]
+    bam = GATK4_APPLYBQSR.out.bam // channel: [ val(meta), path(bam)]
 
 }

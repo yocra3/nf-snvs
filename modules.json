@@ -37,7 +37,7 @@
           },
           "gatk4/applybqsr": {
             "branch": "master",
-            "git_sha": "6b3bf38285d94cc1ea3cd9fa93310d54b04c3819",
+            "git_sha": "1999eff2c530b2b185a25cc42117a1686f09b685",
             "installed_by": ["modules"]
           },
           "gatk4/baserecalibrator": {
