@@ -5,18 +5,34 @@
                 "0": [
                     [
                         {
-                            "id": "Sample_zenodo"
+                            "id": "test_sample"
                         },
-                        "Sample_zenodo.bam:md5,e4e1d9a9d9368ee4eba1ef9e546b169d"
+                        "test_sample.bam:md5,08810bcdc42c53161bb55395d0e9282d"
                     ]
+                ],
+                "1": [
+                    "versions.yml:md5,080f0e7ce02ed9df7ae0b9911f12b015",
+                    "versions.yml:md5,416c404b2a72368d4108f89497a35eec",
+                    "versions.yml:md5,4865167bc121901e9a2bf78a36bb79ee",
+                    "versions.yml:md5,a70ba4c1556659edb743f9748138e7ab",
+                    "versions.yml:md5,b92899c7abb47fa1755de7145e7100e8",
+                    "versions.yml:md5,ca649b5af272fa3a9ae828fb35e9582e"
                 ],
                 "bam": [
                     [
                         {
-                            "id": "Sample_zenodo"
+                            "id": "test_sample"
                         },
-                        "Sample_zenodo.bam:md5,e4e1d9a9d9368ee4eba1ef9e546b169d"
+                        "test_sample.bam:md5,08810bcdc42c53161bb55395d0e9282d"
                     ]
+                ],
+                "versions": [
+                    "versions.yml:md5,080f0e7ce02ed9df7ae0b9911f12b015",
+                    "versions.yml:md5,416c404b2a72368d4108f89497a35eec",
+                    "versions.yml:md5,4865167bc121901e9a2bf78a36bb79ee",
+                    "versions.yml:md5,a70ba4c1556659edb743f9748138e7ab",
+                    "versions.yml:md5,b92899c7abb47fa1755de7145e7100e8",
+                    "versions.yml:md5,ca649b5af272fa3a9ae828fb35e9582e"
                 ]
             }
         ],
@@ -24,7 +40,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-12-12T14:41:20.844735172"
+        "timestamp": "2024-12-13T15:00:32.057649619"
     },
     "mapping - fastq - without intervals": {
         "content": [
@@ -32,18 +48,34 @@
                 "0": [
                     [
                         {
-                            "id": "Sample_zenodo"
+                            "id": "test_sample"
                         },
-                        "Sample_zenodo.bam:md5,b7d533d102ab0efd8b29c799a978a39a"
+                        "test_sample.bam:md5,af50e324876479c8743b91138fac3a76"
                     ]
+                ],
+                "1": [
+                    "versions.yml:md5,080f0e7ce02ed9df7ae0b9911f12b015",
+                    "versions.yml:md5,416c404b2a72368d4108f89497a35eec",
+                    "versions.yml:md5,4865167bc121901e9a2bf78a36bb79ee",
+                    "versions.yml:md5,a70ba4c1556659edb743f9748138e7ab",
+                    "versions.yml:md5,b92899c7abb47fa1755de7145e7100e8",
+                    "versions.yml:md5,ca649b5af272fa3a9ae828fb35e9582e"
                 ],
                 "bam": [
                     [
                         {
-                            "id": "Sample_zenodo"
+                            "id": "test_sample"
                         },
-                        "Sample_zenodo.bam:md5,b7d533d102ab0efd8b29c799a978a39a"
+                        "test_sample.bam:md5,af50e324876479c8743b91138fac3a76"
                     ]
+                ],
+                "versions": [
+                    "versions.yml:md5,080f0e7ce02ed9df7ae0b9911f12b015",
+                    "versions.yml:md5,416c404b2a72368d4108f89497a35eec",
+                    "versions.yml:md5,4865167bc121901e9a2bf78a36bb79ee",
+                    "versions.yml:md5,a70ba4c1556659edb743f9748138e7ab",
+                    "versions.yml:md5,b92899c7abb47fa1755de7145e7100e8",
+                    "versions.yml:md5,ca649b5af272fa3a9ae828fb35e9582e"
                 ]
             }
         ],
@@ -51,6 +83,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-12-12T14:42:12.511760065"
+        "timestamp": "2024-12-13T15:01:26.728134711"
     }
 }

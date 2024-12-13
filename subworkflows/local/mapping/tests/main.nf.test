@@ -53,7 +53,7 @@ nextflow_workflow {
             workflow {
                 """
                 input[0] = [
-                    [ id : 'Sample_zenodo' ],
+                    [ id : 'test_sample' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                 ]
@@ -68,7 +68,7 @@ nextflow_workflow {
                     ])
                 input[4] = PICARD_CREATESEQUENCEDICTIONARY.out.reference_dict
                 input[5] =  Channel.fromList([
-                        tuple([ id: 'Sample_zenodo'],
+                        tuple([ id: 'test_sample'],
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.bed', checkIfExists: true))
                     ])
                 input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz', checkIfExists: true)
@@ -93,7 +93,7 @@ nextflow_workflow {
             workflow {
                 """
                 input[0] = [
-                    [ id : 'Sample_zenodo' ],
+                    [ id : 'test_sample' ],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                 ]
@@ -108,7 +108,7 @@ nextflow_workflow {
                     ])
                 input[4] = PICARD_CREATESEQUENCEDICTIONARY.out.reference_dict
                 input[5] =  Channel.fromList([
-                            tuple([ id: 'Sample_zenodo'],
+                            tuple([ id: 'test_sample'],
                             [])
                         ])
                 input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz', checkIfExists: true)
