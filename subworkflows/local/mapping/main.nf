@@ -22,7 +22,8 @@ workflow MAPPING {
     main:
 
     ch_versions = Channel.empty()
-
+    ch_intervals.view()
+    
     BWA_MEM (
         ch_reads,
         ch_index,

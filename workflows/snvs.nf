@@ -30,7 +30,7 @@ ch_fai   = params.fai ? Channel.fromPath(params.fai).map{ it -> [ [id:it.baseNam
 ch_known_sites = params.known_sites ? Channel.fromPath(params.known_sites) : Channel.empty()
 ch_known_sites_tbi = params.known_sites_tbi ? Channel.fromPath(params.known_sites_tbi) : Channel.empty()
 
-ch_intervals = params.intervals ? Channel.fromPath(params.intervals) : Channel.value("")
+//ch_intervals = params.intervals ? Channel.fromPath(params.intervals).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.value("")
 
 
 /*
@@ -104,14 +104,14 @@ workflow SNVS {
     )
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
      
-    if (params.index) { ch_index = tuple([],file(params.index)) } else { 
+    if (params.index) { ch_index = Channel.fromPath(params.index).map{ it -> [ [id:it.baseName], it ] }.collect() } else { 
     BWA_INDEX (
         ch_fasta
         )
     ch_index = BWA_INDEX.out.index
     }
     
-    if (params.refdict) { ch_refdict = tuple([],file(params.refdict)) } else { 
+    if (params.refdict) { ch_refdict = Channel.fromPath(params.refdict).map{ it -> [ [id:it.baseName], it ] }.collect() } else { 
     PICARD_CREATESEQUENCEDICTIONARY (
         ch_fasta
         )
@@ -126,7 +126,8 @@ workflow SNVS {
         ch_fasta,
         ch_fai,
         ch_refdict,
-        ch_intervals,
+        INPUT_CHECK.out.reads.map{ meta, fastqs -> tuple(meta, []) }, // esto después habrá que cambiarlo cuando sepa si el bed viene desde la samplesheet. Por ahora así funciona
+        //ch_intervals,
         ch_known_sites,
         ch_known_sites_tbi
     )
