@@ -52,11 +52,11 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
+                input[0] = Channel.of([
                     [ id : 'test_sample' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                ]
+                    [file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test.umi_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test.umi_2.fastq.gz', checkIfExists: true)]
+                ])
                 input[1] = BWA_INDEX.out.index
                 input[2] =  Channel.fromList([
                         tuple([ id: 'genome'],
@@ -92,11 +92,11 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                input[0] = [
+                input[0] = Channel.of([
                     [ id : 'test_sample' ],
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
-                ]
+                    [file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test.umi_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test.umi_2.fastq.gz', checkIfExists: true)]
+                ])
                 input[1] = BWA_INDEX.out.index
                 input[2] =  Channel.fromList([
                         tuple([ id: 'genome'],

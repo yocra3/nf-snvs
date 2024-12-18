@@ -7,7 +7,7 @@
                         {
                             "id": "test_sample"
                         },
-                        "test_sample.bam:md5,08810bcdc42c53161bb55395d0e9282d"
+                        "test_sample.bam:md5,abd4b9af0880c5806cb67fc6ff28bb66"
                     ]
                 ],
                 "1": [
@@ -23,7 +23,7 @@
                         {
                             "id": "test_sample"
                         },
-                        "test_sample.bam:md5,08810bcdc42c53161bb55395d0e9282d"
+                        "test_sample.bam:md5,abd4b9af0880c5806cb67fc6ff28bb66"
                     ]
                 ],
                 "versions": [
@@ -40,7 +40,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-12-13T15:00:32.057649619"
+        "timestamp": "2024-12-18T09:10:04.673686326"
     },
     "mapping - fastq - without intervals": {
         "content": [
@@ -50,7 +50,7 @@
                         {
                             "id": "test_sample"
                         },
-                        "test_sample.bam:md5,af50e324876479c8743b91138fac3a76"
+                        "test_sample.bam:md5,1a7a13b854bad750e0c00fd76baba3da"
                     ]
                 ],
                 "1": [
@@ -66,7 +66,7 @@
                         {
                             "id": "test_sample"
                         },
-                        "test_sample.bam:md5,af50e324876479c8743b91138fac3a76"
+                        "test_sample.bam:md5,1a7a13b854bad750e0c00fd76baba3da"
                     ]
                 ],
                 "versions": [
@@ -83,6 +83,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-12-13T15:01:26.728134711"
+        "timestamp": "2024-12-18T09:10:47.770134067"
     }
 }
