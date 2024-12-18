@@ -27,8 +27,9 @@ WorkflowSnvs.initialise(params, log)
 
 ch_fasta   = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
 ch_fai   = params.fai ? Channel.fromPath(params.fai).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
-ch_known_sites = params.known_sites ? Channel.fromPath(params.known_sites) : Channel.empty()
-ch_known_sites_tbi = params.known_sites_tbi ? Channel.fromPath(params.known_sites_tbi) : Channel.empty()
+ch_known_sites = params.known_snps            ? Channel.fromPath(params.known_snps).collect()              : Channel.value([])
+ch_known_sites_tbi = params.known_snps_tbi ? Channel.fromPath(params.known_snps_tbi) : Channel.empty()
+
 
 //ch_intervals = params.intervals ? Channel.fromPath(params.intervals).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.value("")
 
@@ -120,14 +121,15 @@ workflow SNVS {
 
     //ch_fai.view()
     
+    ch_intervals = params.intervals ? INPUT_CHECK.out.reads.map{ meta, fastqs -> tuple(meta, file(params.intervals)) } : INPUT_CHECK.out.reads.map{ meta, fastqs -> tuple(meta, []) }
+
     MAPPING (
         INPUT_CHECK.out.reads,
         ch_index,
         ch_fasta,
         ch_fai,
         ch_refdict,
-        INPUT_CHECK.out.reads.map{ meta, fastqs -> tuple(meta, []) }, // esto después habrá que cambiarlo cuando sepa si el bed viene desde la samplesheet. Por ahora así funciona
-        //ch_intervals,
+        ch_intervals,
         ch_known_sites,
         ch_known_sites_tbi
     )
