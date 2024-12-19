@@ -68,6 +68,11 @@
           "gatk4spark/markduplicates": {
             "branch": "master",
             "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+      "installed_by": ["modules"]
+          },
+          "gatk4/variantfiltration": {
+            "branch": "master",
+            "git_sha": "00409369b2aff69bded4f0a9e7a80e17d933b426",
             "installed_by": ["modules"]
           },
           "multiqc": {
