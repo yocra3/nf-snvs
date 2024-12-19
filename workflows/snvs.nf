@@ -27,7 +27,11 @@ WorkflowSnvs.initialise(params, log)
 
 ch_fasta   = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
 ch_fai   = params.fai ? Channel.fromPath(params.fai).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
+ch_known_sites = params.known_snps            ? Channel.fromPath(params.known_snps).collect()              : Channel.value([])
+ch_known_sites_tbi = params.known_snps_tbi ? Channel.fromPath(params.known_snps_tbi) : Channel.empty()
 
+
+//ch_intervals = params.intervals ? Channel.fromPath(params.intervals).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.value("")
 
 
 /*
@@ -51,6 +55,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
+include { MAPPING } from '../subworkflows/local/mapping'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -100,19 +105,36 @@ workflow SNVS {
     )
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
      
-    if (params.index) { ch_index = tuple([],file(params.index)) } else { 
+    if (params.index) { ch_index = Channel.fromPath(params.index).map{ it -> [ [id:it.baseName], it ] }.collect() } else { 
     BWA_INDEX (
         ch_fasta
         )
     ch_index = BWA_INDEX.out.index
     }
     
-    if (params.refdict) { ch_refdict = tuple([],file(params.refdict)) } else { 
+    if (params.refdict) { ch_refdict = Channel.fromPath(params.refdict).map{ it -> [ [id:it.baseName], it ] }.collect() } else { 
     PICARD_CREATESEQUENCEDICTIONARY (
         ch_fasta
         )
     ch_refdict = PICARD_CREATESEQUENCEDICTIONARY.out.reference_dict
     }
+
+    //ch_fai.view()
+    
+    ch_intervals = params.intervals ? INPUT_CHECK.out.reads.map{ meta, fastqs -> tuple(meta, file(params.intervals)) } : INPUT_CHECK.out.reads.map{ meta, fastqs -> tuple(meta, []) }
+
+    MAPPING (
+        INPUT_CHECK.out.reads,
+        ch_index,
+        ch_fasta,
+        ch_fai,
+        ch_refdict,
+        ch_intervals,
+        ch_known_sites,
+        ch_known_sites_tbi
+    )
+
+    //MAPPING.out.bam.view()
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
