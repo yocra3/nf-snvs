@@ -97,9 +97,12 @@ workflow GATK_VCF {
         ch_refdict
     )
 
+    ch_versions = ch_versions.mix(GATK4_MERGEVCFS.out.versions.first())
+
     BCFTOOLS_FILTER(
         GATK4_MERGEVCFS.out.vcf.join(GATK4_MERGEVCFS.out.tbi)
     )
+    ch_versions = ch_versions.mix(BCFTOOLS_FILTER.out.versions.first())
 
     BCFTOOLS_FILTER.out.tbi.view()
 
