@@ -1,0 +1,82 @@
+nextflow_workflow {
+
+    name "Test Subworkflow GATK_VCF"
+    script "../main.nf"
+    workflow "GATK_VCF"
+
+    tag "subworkflows"
+    tag "subworkflows/gatk_vcf"
+    tag "bwa"
+    tag "bwa/mem"
+    tag "gatk4"
+    tag "gatk4/fastqtosam"
+    tag "gatk4/mergebamalignment"
+    tag "gatk4/fastqtosam"
+    tag "gatk4/baserecalibrator"
+    tag "gatk4/applybqr"
+    tag "gatk4spark"
+    tag "gatk4spark/markduplicates"    
+    tag "picard"
+    tag "picard/sortsam"
+
+
+    setup {
+
+        run("PICARD_CREATESEQUENCEDICTIONARY") {
+            script "../../../../modules/nf-core/picard/createsequencedictionary/main.nf"
+            process {
+                """
+                input[0] = [
+                    [ id: 'genome'],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ]
+                """
+            }
+        }
+    }
+
+    test("gatk_vcf - bam") {
+
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id : 'test_sample' ],
+                    file("/mnt/tblab/yolanda/GT-Bioinfo/test/work/64/3b6a740cc15effafee1d72a1c21bbe/Sample1_T1.bam", checkIfExists: true),
+                    file("/mnt/tblab/yolanda/GT-Bioinfo/test/work/64/3b6a740cc15effafee1d72a1c21bbe/Sample1_T1.bai", checkIfExists: true)
+                ])
+                input[1] =  Channel.fromList([
+                        tuple([ id: 'genome'],
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                    ])
+                input[2] =  Channel.fromList([
+                        tuple([ id: 'genome'],
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                    ])
+                input[3] = PICARD_CREATESEQUENCEDICTIONARY.out.reference_dict
+                input[4] =  Channel.fromList([
+                        tuple([ id: 'test_sample'],
+                        [])
+                    ])
+                input[5] = input[5] =  Channel.fromList([
+                            tuple([ id: 'test_dbsnp'],
+                            [])
+                        ])
+                input[6] = input[5] =  Channel.fromList([
+                            tuple([ id: 'test_dbsnp'],
+                            [])
+                        ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+
+}
