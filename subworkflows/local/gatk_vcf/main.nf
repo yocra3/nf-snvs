@@ -8,6 +8,11 @@ include { GATK4_VARIANTFILTRATION  as  GATK4_VARIANTFILTRATION_MIX       }      
 include { BCFTOOLS_SORT                                                  }      from '../../../modules/nf-core/bcftools/sort/main'
 include { GATK4_MERGEVCFS                                                }      from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
+include { TABIX_TABIX                                                    }      from '../../../modules/nf-core/tabix/tabix/main'
+include { BCFTOOLS_VIEW                                                  }      from '../../../modules/nf-core/bcftools/view/main'
+include { BCFTOOLS_FILTER                                                }      from '../../../modules/nf-core/bcftools/filter/main'
+
+
 workflow GATK_VCF {
 
     take:
@@ -85,11 +90,11 @@ workflow GATK_VCF {
         GATK4_VARIANTFILTRATION_SNV.out.vcf.concat( GATK4_VARIANTFILTRATION_INDEL.out.vcf, GATK4_VARIANTFILTRATION_MIX.out.vcf )
     )
 
-    BCFTOOLS_SORT.out.vcf.view()
+    BCFTOOLS_SORT.out.vcf.groupTuple().view()
     ch_versions = ch_versions.mix(BCFTOOLS_SORT.out.versions.first())
 
     GATK4_MERGEVCFS(
-        BCFTOOLS_SORT.out.vcf.collect().groupTuple(),
+        BCFTOOLS_SORT.out.vcf.groupTuple(),
         ch_refdict
     )
 
