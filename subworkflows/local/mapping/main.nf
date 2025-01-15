@@ -6,6 +6,8 @@ include { PICARD_SORTSAM } from '../../../modules/nf-core/picard/sortsam/main'
 include { GATK4_BASERECALIBRATOR } from '../../../modules/nf-core/gatk4/baserecalibrator/main'
 include { GATK4_APPLYBQSR } from '../../../modules/nf-core/gatk4/applybqsr/main'
 include { SAMTOOLS_SORT   } from '../../../modules/nf-core/samtools/sort/main'
+include { SAMTOOLS_INDEX   } from '../../../modules/nf-core/samtools/index/main'
+
 
 workflow MAPPING {
 
@@ -69,8 +71,13 @@ workflow MAPPING {
     )
     ch_versions = ch_versions.mix(GATK4_APPLYBQSR.out.versions.first())
 
+    SAMTOOLS_INDEX (
+        GATK4_APPLYBQSR.out.bam 
+    )
+    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+
     emit:
-    bam = GATK4_APPLYBQSR.out.bam // channel: [ val(meta), path(bam)]
+    bam = GATK4_APPLYBQSR.out.bam.join(SAMTOOLS_INDEX.out.bai) // channel: [ [val(meta)], path(bam), path(bai)]
     versions = ch_versions                     // channel: [ versions.yml ]
 
 }
