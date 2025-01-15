@@ -8,14 +8,11 @@ include { GATK4_VARIANTFILTRATION  as  GATK4_VARIANTFILTRATION_MIX       }      
 include { BCFTOOLS_SORT                                                  }      from '../../../modules/nf-core/bcftools/sort/main'
 include { GATK4_MERGEVCFS                                                }      from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
-<<<<<<< HEAD
 include { TABIX_TABIX                                                    }      from '../../../modules/nf-core/tabix/tabix/main'
 include { BCFTOOLS_VIEW                                                  }      from '../../../modules/nf-core/bcftools/view/main'
 include { BCFTOOLS_FILTER                                                }      from '../../../modules/nf-core/bcftools/filter/main'
 
 
-=======
->>>>>>> 7345f020bede443160e65469d8a0f673ff1a3b11
 workflow GATK_VCF {
 
     take:
