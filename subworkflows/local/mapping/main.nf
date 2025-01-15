@@ -76,8 +76,10 @@ workflow MAPPING {
     )
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
+    bam = GATK4_APPLYBQSR.out.bam.join(SAMTOOLS_INDEX.out.bai)
+
     emit:
-    bam = GATK4_APPLYBQSR.out.bam.join(SAMTOOLS_INDEX.out.bai) // channel: [ [val(meta)], path(bam), path(bai)]
+    bam  // channel: [ [val(meta)], path(bam), path(bai)]
     versions = ch_versions                     // channel: [ versions.yml ]
 
 }
