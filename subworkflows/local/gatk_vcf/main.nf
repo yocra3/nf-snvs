@@ -16,7 +16,6 @@ workflow GATK_VCF {
 
     take:
     ch_bam        // channel (mandatory): [ val(meta), path(bam), path(bai) ]
-    //ch_index        // channel (mandatory): [ val(meta2), path(index) ]
     ch_fasta        // channel (mandatory) : [ val(meta2), path(fasta) ]
     ch_fai          // channel (mandatory) : [ val(meta2), path(fai) ]
     ch_refdict      // channel (mandatory) : [ val(meta2), path(dict) ]
@@ -29,6 +28,8 @@ workflow GATK_VCF {
     ch_versions = Channel.empty()
     
     ch_dragstr_model = ch_bam.map {meta, bam, bai -> tuple(meta, [])}
+
+
     GATK4_HAPLOTYPECALLER (
         ch_bam.join(ch_intervals).join(ch_dragstr_model),
         ch_fasta,
@@ -44,22 +45,17 @@ workflow GATK_VCF {
     GATK4_SELECTVARIANTS_SNP (
         GATK4_HAPLOTYPECALLER.out.vcf.join(GATK4_HAPLOTYPECALLER.out.tbi).join(ch_intervals)
     )
-
     ch_versions = ch_versions.mix(GATK4_SELECTVARIANTS_SNP.out.versions.first())
 
     GATK4_SELECTVARIANTS_INDEL(
         GATK4_HAPLOTYPECALLER.out.vcf.join(GATK4_HAPLOTYPECALLER.out.tbi).join(ch_intervals)
     )
-
     ch_versions = ch_versions.mix(GATK4_SELECTVARIANTS_INDEL.out.versions.first())
 
     GATK4_SELECTVARIANTS_MIX(
         GATK4_HAPLOTYPECALLER.out.vcf.join(GATK4_HAPLOTYPECALLER.out.tbi).join(ch_intervals)
     )
-
     ch_versions = ch_versions.mix(GATK4_SELECTVARIANTS_MIX.out.versions.first())
-
-
 
     GATK4_VARIANTFILTRATION_SNV(
         GATK4_SELECTVARIANTS_SNP.out.vcf.join(GATK4_SELECTVARIANTS_SNP.out.tbi),
@@ -88,26 +84,23 @@ workflow GATK_VCF {
     BCFTOOLS_SORT(
         GATK4_VARIANTFILTRATION_SNV.out.vcf.concat( GATK4_VARIANTFILTRATION_INDEL.out.vcf, GATK4_VARIANTFILTRATION_MIX.out.vcf )
     )
-
-    
     ch_versions = ch_versions.mix(BCFTOOLS_SORT.out.versions.first())
 
     GATK4_MERGEVCFS(
         BCFTOOLS_SORT.out.vcf.groupTuple(),
         ch_refdict
     )
-
     ch_versions = ch_versions.mix(GATK4_MERGEVCFS.out.versions.first())
 
     BCFTOOLS_FILTER(
         GATK4_MERGEVCFS.out.vcf.join(GATK4_MERGEVCFS.out.tbi)
     )
     ch_versions = ch_versions.mix(BCFTOOLS_FILTER.out.versions.first())
-
-    BCFTOOLS_FILTER.out.tbi.view()
+ 
+    vcf = BCFTOOLS_FILTER.out.vcf.join(BCFTOOLS_FILTER.out.tbi)
 
     emit:
-    vcf = GATK4_HAPLOTYPECALLER.out.vcf // channel: [ val(meta), path(bam)]
+    vcf // channel: [ val(meta), path(bam)]
     versions = ch_versions                     // channel: [ versions.yml ]
 
 }
