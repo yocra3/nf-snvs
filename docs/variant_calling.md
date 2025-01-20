@@ -3,7 +3,7 @@
 ## [GATK subworkflow](https://github.com/CIBERER/GdTBioinfo-nf-snvs/blob/gatk_subworkflow/subworkflows/local/gatk_vcf/main.nf)
 
 This sub-workflow detects variants with [GATK Haplotypecaller](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller) and selects PASS variants. 
-The default PASS criteria are those used in the Bioinformatics Group of the Instituto de Investigación Sanitaria Fundación Jiménez Díaz. They can be modified in the [modules.config file](https://github.com/CIBERER/GdTBioinfo-nf-snvs/blob/3ecd0886380c507d467ce2da78ce4a5868829c05/conf/modules.config#L69C1-L111C6). 
+By default, the pipeline considers the following criteria to mark a variant as PASS. The criteria are coded in the [modules.config file](https://github.com/CIBERER/GdTBioinfo-nf-snvs/blob/3ecd0886380c507d467ce2da78ce4a5868829c05/conf/modules.config#L69C1-L111C6) and can be modified with a user-defined nextflow config file.
 
 **1. Filters for SNVs:** 
   * -filter "QD < 2.0" --filter-name "QD2" 
